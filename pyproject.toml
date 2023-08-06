@@ -18,6 +18,8 @@ httptools = "^0.5.0"
 alembic = "^1.10.4"
 toml = "^0.10.2"
 types-toml = "^0.10.8.6"
+geopy = "^2.3.0"
+httpx = "^0.24.1"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -33,6 +35,7 @@ line-length=120
 
 [tool.ruff.isort]
 lines-after-imports = 2
+lines-between-types = 1
 
 [build-system]
 requires = ["poetry-core"]

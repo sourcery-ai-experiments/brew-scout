@@ -1,16 +1,13 @@
 from contextvars import ContextVar
 
-from sqlalchemy.ext.asyncio import AsyncEngine
+from sqlalchemy.ext.asyncio import AsyncSession
 
-async_engine_var: ContextVar[AsyncEngine] = ContextVar("async_engine")
-
-
-def get_async_engine() -> AsyncEngine | None:
-    try:
-        return async_engine_var.get()
-    except LookupError:
-        return None
+async_session_var: ContextVar[AsyncSession] = ContextVar("async_session")
 
 
-def set_async_engine(engine: AsyncEngine) -> None:
-    async_engine_var.set(engine)
+def get_async_session() -> AsyncSession:
+    return async_session_var.get()
+
+
+def set_async_session(session: AsyncSession) -> None:
+    async_session_var.set(session)
