@@ -11,5 +11,5 @@ router = APIRouter(tags=["Common API's"])
 async def health(settings: AppSettings = Depends(settings_factory)) -> Response:
     if settings.database_dsn:
         return Response(status_code=status.HTTP_200_OK)
-    
+
     return Response(status_code=status.HTTP_503_SERVICE_UNAVAILABLE)

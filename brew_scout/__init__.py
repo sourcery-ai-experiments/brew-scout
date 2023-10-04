@@ -49,4 +49,3 @@ def _get_description() -> str | None:
 VERSION = _get_version() or "DEFAULT-0.0.1"
 MODULE_NAME = _get_name() or "DEFAULT NAME"
 DESCRIPTION = _get_description() or "DEFAULT DESCRIPTION"
-
