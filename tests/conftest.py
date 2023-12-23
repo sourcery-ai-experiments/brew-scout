@@ -29,6 +29,7 @@ def pg_container():
     db_name = "postgres"
     username = "postgres"
     password = "password"
+
     def generate_container_name(x):
         return f"{x}-{uuid.uuid4().hex}"
 
@@ -122,6 +123,7 @@ def alembic_config(pg_conf, template_db):
         "sqlalchemy.url",
         f"postgresql+asyncpg://{pg_conf['user']}:{pg_conf['password']}@{pg_conf['host']}:{pg_conf['port']}/{template_db}",
     )
+    config.set_main_option("script_location", f"{ROOT_DIR}/alembic")
     return config
 
 
