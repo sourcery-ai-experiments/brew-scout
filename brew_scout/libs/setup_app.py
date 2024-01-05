@@ -1,5 +1,6 @@
 from collections import abc
 from contextlib import asynccontextmanager
+import typing as t
 
 import asyncio
 from functools import partial
@@ -15,16 +16,7 @@ from brew_scout import MODULE_NAME, DESCRIPTION, VERSION
 from .settings import AppSettings, SETTINGS_KEY
 from ..apis.v1.base import router as router_v1
 
-
-def configure_db_session_factory(
-    engine: AsyncEngine, factory: async_sessionmaker[AsyncSession]
-) -> async_sessionmaker[AsyncSession]:
-    factory.configure(bind=engine, expire_on_commit=False)
-    return factory
-
-
-def session_getter(loop: asyncio.AbstractEventLoop) -> aiohttp.ClientSession:
-    return aiohttp.ClientSession(loop=loop)
+P = t.ParamSpec("P")
 
 
 def setup_app(settings: AppSettings) -> FastAPI:
@@ -58,10 +50,20 @@ def setup_app(settings: AppSettings) -> FastAPI:
         default_response_class=ORJSONResponse,
         **{SETTINGS_KEY: settings}  # type: ignore
     )
-
     app.include_router(router_v1)
 
     return app
+
+
+def configure_db_session_factory(
+    engine: AsyncEngine, factory: async_sessionmaker[AsyncSession]
+) -> async_sessionmaker[AsyncSession]:
+    factory.configure(bind=engine, expire_on_commit=False)
+    return factory
+
+
+def session_getter(loop: asyncio.AbstractEventLoop, *args: P.args, **kwargs: P.kwargs) -> aiohttp.ClientSession:
+    return aiohttp.ClientSession(loop=loop)
 
 
 def add_origins() -> abc.Sequence[str]:
