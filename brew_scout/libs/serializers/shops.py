@@ -8,8 +8,8 @@ class CoffeeShopsOut(BaseModel):
     name: str
     latitude: float
     longitude: float
-    city: CityOut
     web_url: AnyHttpUrl
+    city: CityOut
 
     class Config:
         orm_mode = True
