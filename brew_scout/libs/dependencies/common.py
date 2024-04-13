@@ -2,10 +2,11 @@ import typing as t
 from collections import abc
 
 from aiohttp import ClientSession
-from fastapi import Request, BackgroundTasks
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from redis.asyncio.client import Redis
+from starlette.background import BackgroundTasks
+from starlette.requests import Request
 
 from ..settings import AppSettings, SETTINGS_KEY
 from ..managers import db_manager, rds_manager
@@ -35,7 +36,7 @@ async def get_rds_session() -> abc.AsyncGenerator[Redis, None]:
 
 
 async def background_runner_factory(request: Request, background_tasks: BackgroundTasks) -> BackgroundRunner:
-    run_now = request.query_params.get("run_now", False)
+    run_now = bool(request.query_params.get("run_now", False))
 
     async def background_runner(func: abc.Callable[P, abc.Awaitable[T]], *args: P.args, **kwargs: P.kwargs) -> None:
         if run_now:
@@ -43,6 +44,7 @@ async def background_runner_factory(request: Request, background_tasks: Backgrou
             return
 
         # Run the function in the background
-        return background_tasks.add_task(func, *args, **kwargs)
+        background_tasks.add_task(func, *args, **kwargs)
+        return
 
     return background_runner

@@ -37,7 +37,7 @@ class TelegramHookHandler:
         if not (
             city := await self.city_service.try_to_find_city_from_coordinates(location.latitude, location.longitude)
         ):
-            self.logger.info(f"City is not found by: {location.latitude} {location.longitude}")
+            self.logger.info(f"City not found with given coordinates: {location.latitude} {location.longitude}")
             return await self.bus_service.send_city_not_found_message(payload.message.chat.id)
 
         if not (coffee_shops := await self._get_coffee_shops_for_city(city.name)):

@@ -1,3 +1,4 @@
+import asyncio
 import atexit
 import dataclasses as dc
 import json
@@ -22,16 +23,18 @@ class TelegramClient:
     default_timeout: float = 35.0
 
     def __post_init__(self) -> None:
-        object.__setattr__(
-            self,
-            "_session",
-            self.session_getter(
-                timeout=aiohttp.ClientTimeout(total=self.default_timeout),
-                headers=self._get_headers(),
-                trust_env=False,
-            ),
-        )
-        atexit.register(self.cleanup)
+        try:
+            object.__setattr__(
+                self,
+                "_session",
+                self.session_getter(
+                    timeout=aiohttp.ClientTimeout(total=self.default_timeout),
+                    headers=self._get_headers(),
+                    trust_env=False,
+                ),
+            )
+        finally:
+            asyncio.run(self.cleanup())
 
     async def cleanup(self) -> None:
         await self._session.close()
