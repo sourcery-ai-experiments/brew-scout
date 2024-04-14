@@ -36,6 +36,7 @@ async def get_rds_session() -> abc.AsyncGenerator[Redis, None]:
 
 
 async def background_runner_factory(request: Request, background_tasks: BackgroundTasks) -> BackgroundRunner:
+    _ = await request.json()
     run_now = bool(request.query_params.get("run_now", False))
 
     async def background_runner(func: abc.Callable[P, abc.Awaitable[T]], *args: P.args, **kwargs: P.kwargs) -> None:

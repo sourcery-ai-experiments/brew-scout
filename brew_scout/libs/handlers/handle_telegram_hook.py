@@ -27,7 +27,7 @@ class TelegramHookHandler:
 
     async def process_hook(self, payload: TelegramHookIn) -> None:
         if self._does_message_start_conversation(payload.message):
-            self.logger.info(f"Start message from {payload.message.chat}")
+            self.logger.info(f"Start message from @{payload.message.chat.username}")
             return await self.bus_service.send_welcome_message(payload.message.chat.id)
 
         if not (location := self._does_message_contain_location(payload.message)):
