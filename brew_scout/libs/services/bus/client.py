@@ -4,10 +4,10 @@ import json
 import typing as t
 from collections import abc
 from contextlib import asynccontextmanager
+from http import HTTPMethod
 
 import aiohttp
 import yarl
-from aiohttp.hdrs import METH_POST
 from aiohttp.typedefs import StrOrURL
 
 from brew_scout import MODULE_NAME, VERSION
@@ -31,13 +31,14 @@ class TelegramClient:
                 trust_env=False,
             ),
         )
+
         atexit.register(self.cleanup)
 
     async def cleanup(self) -> None:
         await self._session.close()
 
-    async def post(self, url: str, data: abc.Mapping[str, t.Any]) -> abc.Mapping[str, t.Any]:
-        return await self._json_request(METH_POST, f"{self.api_url}/{url}", data)
+    async def post(self, telegram_method: str, data: abc.Mapping[str, t.Any]) -> abc.Mapping[str, t.Any]:
+        return await self._json_request(HTTPMethod.POST, f"{self.api_url}/{telegram_method}", data)
 
     async def _json_request(self, method: str, url: StrOrURL, data: abc.Mapping[str, t.Any]) -> abc.Mapping[str, t.Any]:
         async with self._request(method, url, data) as response:

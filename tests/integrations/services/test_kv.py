@@ -24,11 +24,14 @@ async def test_get_coffee_shops_key_exist(service: KVService):
 
 
 async def test_get_nearest_coffee_shops_if_key_not_exist(service: KVService, faker):
-    assert await service.get_nearest_coffee_shops(
-        city_name=faker.pystr(),
-        source_latitude=faker.pyfloat(min_value=-85.05112878, max_value=85.05112878),
-        source_longitude=faker.pyfloat(min_value=-180, max_value=180)
-    ) == []
+    assert (
+        await service.get_nearest_coffee_shops(
+            city_name=faker.pystr(),
+            source_latitude=faker.pyfloat(min_value=-85.05112878, max_value=85.05112878),
+            source_longitude=faker.pyfloat(min_value=-180, max_value=180),
+        )
+        == []
+    )
 
 
 async def test_get_nearest_coffee_shops(service: KVService):
