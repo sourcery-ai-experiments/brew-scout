@@ -57,6 +57,7 @@ class DatabaseSessionManager:
     async def connection(self) -> abc.AsyncIterator[AsyncConnection]:
         if self._engine is None:
             raise IOError("DatabaseSessionManager is not initialized")
+
         async with self._engine.begin() as connection:
             try:
                 yield connection
